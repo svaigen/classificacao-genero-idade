@@ -17,7 +17,7 @@ def getDados(caminho,extensao):
     return arqs       
 
 def geraMFCC(arqs,arquivo):
-    print("Generating MFCC descriptors...")
+    print "Generating MFCC descriptors..."
     file = open(arquivo,"w")    
     for arq in arqs:
         (rate,sig) = wav.read(arq)
@@ -29,7 +29,7 @@ def geraMFCC(arqs,arquivo):
                 file.write("%f " % cepstral)            
         file.write("\n")
     file.close()
-    print("MFCC descriptors Done!")
+    print "MFCC descriptors Done!"
 
 caminho_spec = "../spectrograms/60/"
 caminho_audio = "../audios_wav/"

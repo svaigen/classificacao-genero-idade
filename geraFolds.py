@@ -31,7 +31,7 @@ def getDescritores(arquivo):
     for l in range(len(lines)):
         padroes = lines[l].split(" ")
         for n in range(len(padroes)-1): #o -1 faz com que nao seja atribuido nada para o \n
-            padroes[n] = "{}:".format(n) + padroes[n]
+            padroes[n] = "{}:".format(n+1) + padroes[n]
         descritores.append(padroes)
         if ((l+1) % AMOSTRAS_POR_PESSOA == 0):
             pessoas_descritores.append([int(l/AMOSTRAS_POR_PESSOA),descritores])
@@ -40,10 +40,10 @@ def getDescritores(arquivo):
     return pessoas_descritores
     
 def geraFolds(pessoas_descritores,num_folds,tipo_class):
-    print("Gerando folds...")
+    print "Gerando folds..."
     arq_folds = []
     for i in range(num_folds):
-        arq_folds.append(diretorio_folds+"fold"+str(i)+".txt")    
+        arq_folds.append(diretorio_folds+"fold"+str(i)+".svm")    
     
     if tipo_class == CLASS_GENERO:
         classe_masc = []
@@ -156,10 +156,12 @@ def geraFolds(pessoas_descritores,num_folds,tipo_class):
         random.shuffle(classe_54_mais_fem)
 
         pessoas_classe_por_fold = int(len(classe_0_14_masc)/len(arq_folds))
-
         for n_fold in range(len(arq_folds)):
             init_index = n_fold * pessoas_classe_por_fold
-            end_index = (n_fold+1) * pessoas_classe_por_fold
+            if (n_fold == len(arq_folds)-1) and (len(classe_0_14_masc)*5 % len(arq_folds) != 0):
+                end_index = len(classe_0_14_masc)
+            else:
+                end_index = (n_fold+1) * pessoas_classe_por_fold            
             arq = open(arq_folds[n_fold],"w")
             for pessoa in range(init_index,end_index):
                 for descritor in classe_0_14_masc[pessoa][1]:
@@ -197,7 +199,7 @@ def geraFolds(pessoas_descritores,num_folds,tipo_class):
                                         
             arq.close()
 
-    print("Folds gerados!")
+    print "Folds gerados!" 
     
 pessoas_descritores = getDescritores(arq_descritor)
 geraFolds(pessoas_descritores,NUM_FOLDS,CLASS_GENERO)
