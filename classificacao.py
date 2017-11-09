@@ -5,7 +5,8 @@ import numpy as np
 
 NUM_FOLDS = 4
 svm_tipos = ['csvc','nusvc']
-svm_kernel = ['linear','poly','radial','sigmoid']
+svm_kernel = ['linear','poly','radial']
+latefusion_qtde = 3
 
 diretorio_folds = "/home/svaigen/tic-genero-faixaetaria/folds/"
 
@@ -145,18 +146,20 @@ def genInfoFiles(accuracys,dir):
     f.write("--> Media de acuracia: {}".format(np.mean(npvals)))
     f.write("--> Desvio Padrao: {}".format(np.std(npvals)))
     f.close()
-    
-for t in range(len(svm_tipos)):
-    print "------Execucao de svm do tipo {}------".format(svm_tipos[t])
-    for k in range(len(svm_kernel)): 
-        print "---- Kernel: {}".format(svm_kernel[k])
-        for fold in range(NUM_FOLDS):
-            print "Inicializando execucao de cross-fold validation..."
-            print "Execucao de cross-fold n. {}".format(fold)
-            classifica(diretorio_folds,NUM_FOLDS,fold,t,k)
-            print "Execucao de cross-fold n.{} finalizada.\n".format(fold)
-        print "Gerando analise dos resultados..."
-        diretorio_resultados = "/home/svaigen/tic-genero-faixaetaria/resultados/mfcc100-genero-4folds-{}-{}/".format(svm_tipos[t],svm_kernel[k])
-        accuracys = analisa(diretorio_folds,diretorio_resultados)
-        genInfoFiles(accuracys,diretorio_resultados)
-        print"Analise dos resultados concluida. Resultados disponiveis em {}".format(diretorio_resultados)
+
+for i in range(latefusion_qtde):
+    print "-----------------Execucao do descritor de numero " + str(i)
+    for t in range(len(svm_tipos)):
+        print "------Execucao de svm do tipo {}------".format(svm_tipos[t])
+        for k in range(len(svm_kernel)): 
+            print "---- Kernel: {}".format(svm_kernel[k])
+            for fold in range(NUM_FOLDS):
+                print "Inicializando execucao de cross-fold validation..."
+                print "Execucao de cross-fold n. {}".format(fold)
+                classifica(diretorio_folds+str(i)+"/",NUM_FOLDS,fold,t,k)
+                print "Execucao de cross-fold n.{} finalizada.\n".format(fold)
+            print "Gerando analise dos resultados..."
+            diretorio_resultados = "/home/svaigen/tic-genero-faixaetaria/resultados/"+str(i)+"/"+str(i)+"-gen_faixa-4folds-{}-{}/".format(svm_tipos[t],svm_kernel[k])
+            accuracys = analisa(diretorio_folds+str(i)+"/",diretorio_resultados)
+            genInfoFiles(accuracys,diretorio_resultados)
+            print"Analise dos resultados concluida. Resultados disponiveis em {}".format(diretorio_resultados)
