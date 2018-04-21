@@ -3,10 +3,10 @@ import sys
 import shutil
 import numpy as np
 
-NUM_FOLDS = 4
-svm_tipos = ['csvc','nusvc']
+NUM_FOLDS = 5
+svm_tipos = ['csvc']
 svm_kernel = ['linear','poly','radial']
-latefusion_qtde = 3
+latefusion_qtde = 1
 
 diretorio_folds = "/home/svaigen/tic-genero-faixaetaria/folds/"
 
@@ -159,7 +159,7 @@ for i in range(latefusion_qtde):
                 classifica(diretorio_folds+str(i)+"/",NUM_FOLDS,fold,t,k)
                 print "Execucao de cross-fold n.{} finalizada.\n".format(fold)
             print "Gerando analise dos resultados..."
-            diretorio_resultados = "/home/svaigen/tic-genero-faixaetaria/resultados/"+str(i)+"/"+str(i)+"-gen_faixa-4folds-{}-{}/".format(svm_tipos[t],svm_kernel[k])
+            diretorio_resultados = "/home/svaigen/tic-genero-faixaetaria/resultados/"+str(i)+"/"+str(i)+"-gen_faixa-{}folds-{}-{}/".format(NUM_FOLDS,svm_tipos[t],svm_kernel[k])
             accuracys = analisa(diretorio_folds+str(i)+"/",diretorio_resultados)
             genInfoFiles(accuracys,diretorio_resultados)
             print"Analise dos resultados concluida. Resultados disponiveis em {}".format(diretorio_resultados)
