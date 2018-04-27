@@ -201,7 +201,7 @@ def calculateConfusionMatrix(expectedList, predictedList):
 def calculatePrecisionRecall(confusionMatrix):
     recalls = []
     for i in range(len(confusionMatrix)):
-        recalls.append(float(confusionMatrix[i][i]) / float(confusionMatrix[i].sum()))
+        recalls.append(0 if confusionMatrix[i].sum() == 0 else float(confusionMatrix[i][i]) / float(confusionMatrix[i].sum()))
     precisions = []
     cmT = np.transpose(confusionMatrix)
     for i in range(len(cmT)):
@@ -294,7 +294,6 @@ for fold in entradas:
         predicoes_max = np.zeros(dimensoes,dtype=np.float64)        
         predicoes_min = np.ones(dimensoes,dtype=np.float64)
         arquivo.close()
-        
         for entrada in conjunto_entrada:
             arquivo = open(entrada,"r")
             lines = arquivo.readlines()
